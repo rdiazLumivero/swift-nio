@@ -263,13 +263,21 @@ extension CircularBuffer: RandomAccessCollection {
     ///   value of `distance`.
     @inlinable
     public subscript(bounds: Range<Index>) -> SubSequence {
-        precondition(self.distance(from: self.startIndex, to: bounds.lowerBound) >= 0)
-        precondition(self.distance(from: bounds.upperBound, to: self.endIndex) >= 0)
+        get {
+            precondition(self.distance(from: self.startIndex, to: bounds.lowerBound) >= 0)
+            precondition(self.distance(from: bounds.upperBound, to: self.endIndex) >= 0)
 
-        var newRing = self
-        newRing.headBackingIndex = bounds.lowerBound.backingIndex
-        newRing.tailBackingIndex = bounds.upperBound.backingIndex
-        return newRing
+            var newRing = self
+            newRing.headBackingIndex = bounds.lowerBound.backingIndex
+            newRing.tailBackingIndex = bounds.upperBound.backingIndex
+            return newRing
+        }
+        set {
+            precondition(self.distance(from: self.startIndex, to: bounds.lowerBound) >= 0)
+            precondition(self.distance(from: bounds.upperBound, to: self.endIndex) >= 0)
+
+            self.replaceSubrange(bounds, with: newValue)
+        }
     }
 }
 
